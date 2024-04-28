@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using LibraryManager.Application.Commands.SignUpUser;
 using LibraryManager.Application.Commands.UpdateUser;
 using LibraryManager.Application.Queries.GetUserById;
+using LibraryManager.Application.Queries.GetUsersAll;
+using LibraryManager.Application.Queries.GetUserByCpf;
 
 namespace LibraryManager.API.Controllers
 {
@@ -16,10 +18,39 @@ namespace LibraryManager.API.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var query = new GetAllUsersQuery();
+
+            var result = await _mediator.Send(query);
+
+            if (!result.Success && result.Data == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var query = new GetUserByIdQuery(id);
+
+            var result = await _mediator.Send(query);
+
+            if (!result.Success && result.Data == null) {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+        
+        [HttpGet("GetByCpf/{cpf}")]
+        public async Task<IActionResult> GetByCpf(string cpf)
+        {
+            var query = new GetUserByCpfQuery(cpf);
 
             var result = await _mediator.Send(query);
 
