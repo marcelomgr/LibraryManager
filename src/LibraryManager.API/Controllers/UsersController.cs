@@ -66,6 +66,11 @@ namespace LibraryManager.API.Controllers
         {
             var result = await _mediator.Send(command);
 
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
         }
 
