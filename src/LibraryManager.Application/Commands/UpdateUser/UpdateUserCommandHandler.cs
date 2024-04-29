@@ -32,7 +32,8 @@ namespace LibraryManager.Application.Commands.UpdateUser
                 request.FirstName,
                 request.FullName,
                 request.Email,
-                request.CPF);
+                request.CPF,
+                request.Location.ToValueObject());
 
             await _repository.UpdateAsync(user);
 

@@ -1,7 +1,9 @@
-﻿using MediatR;
-using FluentValidation;
-using LibraryManager.Application.Models;
+﻿using LibraryManager.Application.Models;
 using LibraryManager.Core.Repositories;
+using LibraryManager.Infrastructure.Integrations.ApiCep.Interfaces;
+using MediatR;
+using LibraryManager.Core.ValueObjects;
+using FluentValidation;
 
 namespace LibraryManager.Application.Commands.SignUpUser
 {
@@ -9,11 +11,13 @@ namespace LibraryManager.Application.Commands.SignUpUser
 	{
         private readonly IUserRepository _repository;
         private readonly IValidator<SignUpUserCommand> _validator;
+        private readonly IApiCepService _apiCepService;
 
-        public SignUpUserCommandHandler(IUserRepository repository, IValidator<SignUpUserCommand> validator)
+        public SignUpUserCommandHandler(IUserRepository repository, IValidator<SignUpUserCommand> validator, IApiCepService apiCepService)
 		{
             _repository = repository;
             _validator = validator;
+            _apiCepService = apiCepService;
         }
 
         public async Task<BaseResult<Guid>> Handle(SignUpUserCommand request, CancellationToken cancellationToken)
@@ -27,6 +31,14 @@ namespace LibraryManager.Application.Commands.SignUpUser
             }
 
             var user = request.ToEntity();
+
+            var resultCep = await _apiCepService.GetByCep(request.CEP);
+
+            if (resultCep != null)
+            {
+                var location = new LocationInfo(resultCep.Cep, resultCep.Logradouro, resultCep.Bairro, resultCep.Localidade, resultCep.UF);
+                user.SetLocation(location);
+            }
 
             await _repository.AddAsync(user);
 

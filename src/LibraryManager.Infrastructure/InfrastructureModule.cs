@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using LibraryManager.Infrastructure.Persistence;
 using LibraryManager.Infrastructure.Persistence.Repositories;
+using LibraryManager.Infrastructure.Integrations.ApiCep.Interfaces;
+using LibraryManager.Infrastructure.Integrations.ApiCep.Services;
 
 namespace LibraryManager.Infrastructure
 {
@@ -15,7 +17,8 @@ namespace LibraryManager.Infrastructure
 
             services
                 .AddDb(connectionString)
-                .AddRepositories();
+                .AddRepositories()
+                .AddIntegrations();
 
             return services;
         }
@@ -32,6 +35,13 @@ namespace LibraryManager.Infrastructure
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddIntegrations(this IServiceCollection services)
+        {
+            services.AddScoped<IApiCepService, ApiCepService>();
 
             return services;
         }

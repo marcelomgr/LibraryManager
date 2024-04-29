@@ -1,9 +1,8 @@
-﻿using System;
-using LibraryManager.Core.Entities;
+﻿using LibraryManager.Core.Entities;
 
 namespace LibraryManager.Core.Repositories
 {
-	public interface IUserRepository
+    public interface IUserRepository
 	{
 		Task AddAsync(User user);
 		Task UpdateAsync(User user);

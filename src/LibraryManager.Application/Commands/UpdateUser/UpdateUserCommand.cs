@@ -11,6 +11,7 @@ namespace LibraryManager.Application.Commands.UpdateUser
 		public string FullName { get; set; }
 		public string Email { get; set; }
 		public string CPF { get; set; }
-	}
+        public LocationInfoModel Location { get; set; }
+    }
 }
 

@@ -1,6 +1,5 @@
 ﻿using LibraryManager.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace LibraryManager.Infrastructure.Persistence
 {
@@ -18,23 +17,15 @@ namespace LibraryManager.Infrastructure.Persistence
             {
                 e.HasKey(u => u.Id);
 
-                //e.OwnsOne(u => u.Location,
-                //    builder =>
-                //    {
-                //        builder.Property(p => p.City).HasColumnName("City");
-                //        builder.Property(p => p.State).HasColumnName("State");
-                //        builder.Property(p => p.Country).HasColumnName("Country");
-                //    });
-
-                //e.OwnsOne(u => u.Contact,
-                //    builder =>
-                //    {
-                //        builder.Property(p => p.Email).HasColumnName("Email");
-                //        builder.Property(p => p.Website).HasColumnName("Website");
-                //        builder.Property(p => p.PhoneNumber).HasColumnName("PhoneNumber");
-                //    });
-
-                //e.Ignore(p => p.Events);
+                e.OwnsOne(u => u.Location,
+                    builder =>
+                    {
+                        builder.Property(p => p.Cep).HasColumnName("Cep");
+                        builder.Property(p => p.Address).HasColumnName("Address");
+                        builder.Property(p => p.District).HasColumnName("District");
+                        builder.Property(p => p.City).HasColumnName("City");
+                        builder.Property(p => p.State).HasColumnName("State");
+                    });
             });
         }
     }
