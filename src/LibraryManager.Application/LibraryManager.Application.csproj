@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LibraryManager.Utilities\LibraryManager.Utilities.csproj" />
     <ProjectReference Include="..\LibraryManager.Core\LibraryManager.Core.csproj" />
     <ProjectReference Include="..\LibraryManager.Infrastructure\LibraryManager.Infrastructure.csproj" />
+    <ProjectReference Include="..\LibraryManager.Utilities\LibraryManager.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
