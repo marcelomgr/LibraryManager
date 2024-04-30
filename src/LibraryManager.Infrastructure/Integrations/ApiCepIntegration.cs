@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
-using LibraryManager.Infrastructure.Integrations.ApiCep.Models;
-using LibraryManager.Infrastructure.Integrations.ApiCep.Interfaces;
+using LibraryManager.Core.Integrations.ApiCepIntegration;
+using LibraryManager.Core.Integrations.ApiCepIntegration.Models;
 
-namespace LibraryManager.Infrastructure.Integrations.ApiCep.Services
+namespace LibraryManager.Infrastructure.Integrations
 {
-    public class ApiCepService : IApiCepService
+    public class ApiCepIntegration : IApiCepService
     {
         private readonly HttpClient _httpClient;
-        public ApiCepService()
+        public ApiCepIntegration()
         {
             _httpClient = new HttpClient();
         }
@@ -15,7 +15,6 @@ namespace LibraryManager.Infrastructure.Integrations.ApiCep.Services
         private string GetBaseUrl()
         {
             return "https://viacep.com.br/ws";
-            //return "https://viacep.com.br/ws/06462260/json";
         }
 
         public async Task<CepViewModel?> GetByCep(string Cep)

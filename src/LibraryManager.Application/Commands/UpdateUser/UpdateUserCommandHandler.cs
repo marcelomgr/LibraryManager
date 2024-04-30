@@ -3,7 +3,7 @@ using FluentValidation;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Core.ValueObjects;
 using LibraryManager.Application.Models;
-using LibraryManager.Infrastructure.Integrations.ApiCep.Interfaces;
+using LibraryManager.Core.Integrations.ApiCepIntegration;
 
 namespace LibraryManager.Application.Commands.UpdateUser
 {

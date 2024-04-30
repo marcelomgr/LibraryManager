@@ -3,9 +3,9 @@ using LibraryManager.Core.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using LibraryManager.Infrastructure.Persistence;
+using LibraryManager.Infrastructure.Integrations;
+using LibraryManager.Core.Integrations.ApiCepIntegration;
 using LibraryManager.Infrastructure.Persistence.Repositories;
-using LibraryManager.Infrastructure.Integrations.ApiCep.Interfaces;
-using LibraryManager.Infrastructure.Integrations.ApiCep.Services;
 
 namespace LibraryManager.Infrastructure
 {
@@ -41,7 +41,7 @@ namespace LibraryManager.Infrastructure
 
         private static IServiceCollection AddIntegrations(this IServiceCollection services)
         {
-            services.AddScoped<IApiCepService, ApiCepService>();
+            services.AddScoped<IApiCepService, ApiCepIntegration>();
 
             return services;
         }

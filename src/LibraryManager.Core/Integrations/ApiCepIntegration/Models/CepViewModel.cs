@@ -1,4 +1,4 @@
-﻿namespace LibraryManager.Infrastructure.Integrations.ApiCep.Models
+﻿namespace LibraryManager.Core.Integrations.ApiCepIntegration.Models
 {
     public class CepViewModel
     {
