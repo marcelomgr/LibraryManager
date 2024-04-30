@@ -47,7 +47,7 @@ namespace LibraryManager.API.Controllers
             return Ok(result);
         }
         
-        [HttpGet("GetByCpf/{cpf}")]
+        [HttpGet("cpf={cpf}")]
         public async Task<IActionResult> GetByCpf(string cpf)
         {
             var query = new GetUserByCpfQuery(cpf);
