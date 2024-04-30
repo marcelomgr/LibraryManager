@@ -1,4 +1,5 @@
 ﻿using LibraryManager.Core.Entities;
+using LibraryManager.Application.Commands.UpdateUser;
 
 namespace LibraryManager.Application.Queries.GetUserById
 {
@@ -10,14 +11,13 @@ namespace LibraryManager.Application.Queries.GetUserById
             FullName = user.FullName;
             Email = user.Email;
             CPF = user.CPF;
-
-            //Country = user.Location?.Country;
-            //Website = user.Contact?.Website;
+            Location = user.Location != null ? new LocationInfoModel(user.Location) : null;
         }
 
         public string FirstName { get; private set; }
         public string FullName { get; private set; }
         public string? Email { get; private set; }
         public string? CPF { get; private set; }
+        public LocationInfoModel? Location { get; set; }
     }
 }

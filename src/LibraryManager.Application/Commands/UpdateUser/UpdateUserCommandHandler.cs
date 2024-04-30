@@ -1,19 +1,23 @@
 ﻿using MediatR;
 using FluentValidation;
 using LibraryManager.Core.Repositories;
+using LibraryManager.Core.ValueObjects;
 using LibraryManager.Application.Models;
+using LibraryManager.Infrastructure.Integrations.ApiCep.Interfaces;
 
 namespace LibraryManager.Application.Commands.UpdateUser
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, BaseResult>
-	{
+    {
         private readonly IUserRepository _repository;
         private readonly IValidator<UpdateUserCommand> _validator;
+        private readonly IApiCepService _apiCepService;
 
-        public UpdateUserCommandHandler(IUserRepository repository, IValidator<UpdateUserCommand> validator)
-		{
+        public UpdateUserCommandHandler(IUserRepository repository, IValidator<UpdateUserCommand> validator, IApiCepService apiCepService)
+        {
             _repository = repository;
             _validator = validator;
+            _apiCepService = apiCepService;
         }
 
         public async Task<BaseResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -28,12 +32,23 @@ namespace LibraryManager.Application.Commands.UpdateUser
 
             var user = await _repository.GetByIdAsync(request.Id);
 
+            if (user.Location?.Cep != request.CEP)
+            {
+                var resultCep = await _apiCepService.GetByCep(request.CEP);
+
+                if (resultCep == null)
+                    return new BaseResult<Guid>(Guid.Empty, false, "CEP não encontrado.");
+
+                var location = new LocationInfo(resultCep.Cep, resultCep.Logradouro, resultCep.Bairro, resultCep.Localidade, resultCep.UF);
+                user.SetLocation(location);
+            }
+
             user.Update(
                 request.FirstName,
                 request.FullName,
                 request.Email,
                 request.CPF,
-                request.Location.ToValueObject());
+                user.Location);
 
             await _repository.UpdateAsync(user);
 

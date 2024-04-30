@@ -28,6 +28,10 @@ namespace LibraryManager.Application.Validators
                         context.AddFailure("CPF", "CPF inválido");
                     }
                 });
+
+            RuleFor(x => x.CEP)
+                .NotEmpty()
+                .MinimumLength(8);
         }
     }
 }

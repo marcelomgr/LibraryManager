@@ -18,8 +18,8 @@ namespace LibraryManager.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
             var query = new GetAllUsersQuery();
 
