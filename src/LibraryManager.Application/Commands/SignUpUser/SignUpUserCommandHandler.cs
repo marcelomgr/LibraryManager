@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using LibraryManager.Core.ValueObjects;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Application.Models;
+using LibraryManager.Core.Services.AuthService;
 using LibraryManager.Core.Integrations.ApiCepIntegration;
 
 namespace LibraryManager.Application.Commands.SignUpUser
@@ -13,12 +14,14 @@ namespace LibraryManager.Application.Commands.SignUpUser
         private readonly IUserRepository _repository;
         private readonly IValidator<SignUpUserCommand> _validator;
         private readonly IApiCepService _apiCepService;
+        private readonly IAuthService _authService;
 
-        public SignUpUserCommandHandler(IUserRepository repository, IValidator<SignUpUserCommand> validator, IApiCepService apiCepService)
+        public SignUpUserCommandHandler(IUserRepository repository, IValidator<SignUpUserCommand> validator, IApiCepService apiCepService, IAuthService authService)
         {
             _repository = repository;
             _validator = validator;
             _apiCepService = apiCepService;
+            _authService = authService;
         }
 
         public async Task<BaseResult<Guid>> Handle(SignUpUserCommand request, CancellationToken cancellationToken)
@@ -27,9 +30,11 @@ namespace LibraryManager.Application.Commands.SignUpUser
 
             if (!validationResult.IsValid)
             {
-                var errorMessages = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                var errorMessages = string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage));
                 return new BaseResult<Guid>(Guid.Empty, false, errorMessages);
             }
+
+            request.Password = _authService.HashPassword(request.Password);
 
             var user = request.ToEntity();
 

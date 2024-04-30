@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using LibraryManager.Core.Repositories;
 using Microsoft.Extensions.Configuration;
+using LibraryManager.Infrastructure.Services;
+using LibraryManager.Core.Services.AuthService;
 using Microsoft.Extensions.DependencyInjection;
 using LibraryManager.Infrastructure.Persistence;
 using LibraryManager.Infrastructure.Integrations;
@@ -18,7 +20,8 @@ namespace LibraryManager.Infrastructure
             services
                 .AddDb(connectionString)
                 .AddRepositories()
-                .AddIntegrations();
+                .AddIntegrations()
+                .AddServices();
 
             return services;
         }
@@ -42,6 +45,13 @@ namespace LibraryManager.Infrastructure
         private static IServiceCollection AddIntegrations(this IServiceCollection services)
         {
             services.AddScoped<IApiCepService, ApiCepIntegration>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using LibraryManager.Utilities;
+using LibraryManager.Core.Enums;
 using LibraryManager.Application.Commands.SignUpUser;
 
 namespace LibraryManager.Application.Validators
@@ -8,12 +9,9 @@ namespace LibraryManager.Application.Validators
     {
         public SignUpUserValidator()
         {
-            RuleFor(x => x.FirstName)
+            RuleFor(x => x.Name)
                 .NotEmpty()
                 .MinimumLength(2);
-
-            RuleFor(x => x.FullName)
-                .NotEmpty();
 
             RuleFor(x => x.CPF)
                 .NotEmpty()
@@ -24,6 +22,11 @@ namespace LibraryManager.Application.Validators
                         context.AddFailure("CPF", "CPF inválido");
                     }
                 });
+
+            RuleFor(x => x.Role)
+                .NotEmpty()
+                .Must(role => Enum.TryParse<UserRole>(role, out _))
+                .WithMessage("Role inválida");
         }
     }
 }

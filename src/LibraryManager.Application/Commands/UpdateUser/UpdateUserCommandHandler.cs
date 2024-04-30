@@ -4,6 +4,7 @@ using LibraryManager.Core.Repositories;
 using LibraryManager.Core.ValueObjects;
 using LibraryManager.Application.Models;
 using LibraryManager.Core.Integrations.ApiCepIntegration;
+using LibraryManager.Core.Enums;
 
 namespace LibraryManager.Application.Commands.UpdateUser
 {
@@ -26,7 +27,7 @@ namespace LibraryManager.Application.Commands.UpdateUser
 
             if (!validationResult.IsValid)
             {
-                var errorMessages = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                var errorMessages = string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage));
                 return new BaseResult<Guid>(Guid.Empty, false, errorMessages);
             }
 
@@ -44,10 +45,11 @@ namespace LibraryManager.Application.Commands.UpdateUser
             }
 
             user.Update(
-                request.FirstName,
-                request.FullName,
-                request.Email,
+                request.Name,
                 request.CPF,
+                request.Password,
+                request.Email,
+                Enum.Parse<UserRole>(request.Role.ToString()),
                 user.Location);
 
             await _repository.UpdateAsync(user);

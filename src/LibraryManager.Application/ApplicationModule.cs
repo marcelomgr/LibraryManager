@@ -2,6 +2,7 @@
 using FluentValidation;
 using LibraryManager.Application.Validators;
 using Microsoft.Extensions.DependencyInjection;
+using LibraryManager.Application.Commands.AuthUser;
 using LibraryManager.Application.Commands.SignUpUser;
 using LibraryManager.Application.Commands.UpdateUser;
 

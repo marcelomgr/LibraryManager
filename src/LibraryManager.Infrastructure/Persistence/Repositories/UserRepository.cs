@@ -47,6 +47,11 @@ namespace LibraryManager.Infrastructure.Persistence.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<User?> ValidateUserCredentialsAsync(string cpf, string passwordHash)
+        {
+            return await _context.Users.SingleOrDefaultAsync(u => u.CPF == cpf && u.Password == passwordHash);
+        }
     }
 }
 

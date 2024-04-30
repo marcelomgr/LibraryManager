@@ -1,7 +1,6 @@
-﻿using System;
+﻿using MediatR;
 using LibraryManager.Application.Models;
 using LibraryManager.Core.Repositories;
-using MediatR;
 
 namespace LibraryManager.Application.Queries.GetUserById
 {
@@ -13,17 +12,17 @@ namespace LibraryManager.Application.Queries.GetUserById
             _repository = repository;
         }
 
-        public async Task<BaseResult<GetUserByIdViewModel>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResult<GetUserByIdViewModel?>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             var user = await _repository.GetByIdAsync(request.Id);
 
             if (user is null) {
-                return new BaseResult<GetUserByIdViewModel>(null, false, string.Empty);
+                return new BaseResult<GetUserByIdViewModel?>(null, false, string.Empty);
             }
 
             var viewModel = new GetUserByIdViewModel(user);
 
-            return new BaseResult<GetUserByIdViewModel>(viewModel);
+            return new BaseResult<GetUserByIdViewModel?>(viewModel);
         }
     }
 }

@@ -10,21 +10,26 @@ namespace LibraryManager.Core.Entities
             Status = UserStatus.Active;
         }
 
-        public User(string firstName, string fullName, string email, string cpf)
+        public User(string name, string cpf, string password, string email, string role)
             : this()
         {
-            FirstName = firstName;
-            FullName = fullName;
+            Name = name;
             CPF = cpf;
+            Password = password;
             Email = email;
-
+            
+            if (Enum.TryParse<UserRole>(role, out UserRole parsedRole))
+                Role = parsedRole;
+            else
+                Role = UserRole.Basic;
         }
 
-        public string FirstName { get; private set; }
-        public string FullName { get; private set; }
-        public string Email { get; private set; }
-        public string CPF { get; private set; }
+        public string Name { get; set; }
+        public string CPF { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
         public UserStatus Status { get; private set; }
+        public UserRole Role { get; set; }
         public LocationInfo? Location { get; private set; }
 
         public void SetLocation(LocationInfo location)
@@ -32,16 +37,18 @@ namespace LibraryManager.Core.Entities
             Location = location;
         }
 
-        public void Update(string firstName,
-            string fullName,
-            string email,
+        public void Update(string name,
             string cpf,
+            string password,
+            string email,
+            UserRole role,
             LocationInfo location)
         {
-            FirstName = firstName;
-            FullName = fullName;
-            Email = email;
+            Name = name;
             CPF = cpf;
+            Password = password;
+            Email = email;
+            Role = role;
             Location = location;
         }
     }

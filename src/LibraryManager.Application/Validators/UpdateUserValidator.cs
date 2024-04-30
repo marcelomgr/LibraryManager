@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using LibraryManager.Utilities;
+using LibraryManager.Core.Enums;
 using LibraryManager.Application.Commands.UpdateUser;
 
 namespace LibraryManager.Application.Validators
@@ -8,12 +9,9 @@ namespace LibraryManager.Application.Validators
     {
         public UpdateUserValidator()
         {
-            RuleFor(x => x.FirstName)
+            RuleFor(x => x.Name)
                 .NotEmpty()
                 .MinimumLength(2);
-
-            RuleFor(x => x.FullName)
-                .NotEmpty();
 
             RuleFor(x => x.Email)
                 .NotEmpty()
@@ -32,6 +30,11 @@ namespace LibraryManager.Application.Validators
             RuleFor(x => x.CEP)
                 .NotEmpty()
                 .MinimumLength(8);
+
+            RuleFor(x => x.Role)
+                .NotEmpty()
+                .Must(role => Enum.TryParse<UserRole>(role, out _))
+                .WithMessage("Role inválida");
         }
     }
 }

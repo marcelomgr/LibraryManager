@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using LibraryManager.Application.Commands.AuthUser;
 using LibraryManager.Application.Commands.SignUpUser;
 using LibraryManager.Application.Commands.UpdateUser;
 using LibraryManager.Application.Queries.GetUserById;
@@ -8,6 +10,7 @@ using LibraryManager.Application.Queries.GetUserByCpf;
 
 namespace LibraryManager.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase
@@ -25,7 +28,7 @@ namespace LibraryManager.API.Controllers
 
             var result = await _mediator.Send(query);
 
-            if (!result.Success && result.Data == null)
+            if (!result.Success && result.Data is null)
             {
                 return NotFound();
             }
@@ -40,7 +43,7 @@ namespace LibraryManager.API.Controllers
 
             var result = await _mediator.Send(query);
 
-            if (!result.Success && result.Data == null) {
+            if (!result.Success && result.Data is null) {
                 return NotFound();
             }
 
@@ -54,7 +57,7 @@ namespace LibraryManager.API.Controllers
 
             var result = await _mediator.Send(query);
 
-            if (!result.Success && result.Data == null) {
+            if (!result.Success && result.Data is null) {
                 return NotFound();
             }
 
@@ -71,7 +74,7 @@ namespace LibraryManager.API.Controllers
                 return BadRequest(result.Message);
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
@@ -80,6 +83,20 @@ namespace LibraryManager.API.Controllers
             command.Id = id;
 
             var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+
+        [HttpPost("auth")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Auth([FromBody] AuthUserCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (result is null)
+            {
+                return BadRequest();
+            }
 
             return Ok(result);
         }
