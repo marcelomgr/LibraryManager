@@ -65,6 +65,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Post(SignUpUserCommand command)
         {
             var result = await _mediator.Send(command);

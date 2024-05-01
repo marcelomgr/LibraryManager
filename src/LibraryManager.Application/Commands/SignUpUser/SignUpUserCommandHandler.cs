@@ -34,15 +34,20 @@ namespace LibraryManager.Application.Commands.SignUpUser
                 return new BaseResult<Guid>(Guid.Empty, false, errorMessages);
             }
 
+            var existingUser = await _repository.GetByCpfAsync(request.CPF.Trim().Replace(".", "").Replace("-", ""));
+
+            if (existingUser is not null)
+                return new BaseResult<Guid>(Guid.Empty, false, "CPF já cadastrado.");
+
             request.Password = _authService.HashPassword(request.Password);
 
             var user = request.ToEntity();
 
-            if (request.CEP != null && !request.CEP.IsNullOrEmpty())
+            if (request.CEP is not null && !request.CEP.IsNullOrEmpty())
             {
                 var resultCep = await _apiCepService.GetByCep(request.CEP);
 
-                if (resultCep == null)
+                if (resultCep is null)
                     return new BaseResult<Guid>(Guid.Empty, false, "CEP não encontrado.");
 
                 var location = new LocationInfo(resultCep.Cep, resultCep.Logradouro, resultCep.Bairro, resultCep.Localidade, resultCep.UF);
@@ -55,4 +60,3 @@ namespace LibraryManager.Application.Commands.SignUpUser
         }
     }
 }
-

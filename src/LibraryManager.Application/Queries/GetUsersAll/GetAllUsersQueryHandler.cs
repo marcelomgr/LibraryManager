@@ -15,7 +15,7 @@ namespace LibraryManager.Application.Queries.GetUsersAll
         {
             var users = await _repository.GetAllAsync();
 
-            if (users == null)
+            if (users is null)
             {
                 return new BaseResult<List<GetAllUsersViewModel>>(null, false, "Nenhum usuário encontrado");
             }

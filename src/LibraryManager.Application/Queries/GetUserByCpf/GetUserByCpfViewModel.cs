@@ -10,7 +10,7 @@ namespace LibraryManager.Application.Queries.GetUserByCpf
             Name = user.Name;
             CPF = user.CPF;
             Email = user.Email;
-            Location = user.Location != null ? new LocationInfoModel(user.Location) : null;
+            Location = user.Location is not null ? new LocationInfoModel(user.Location) : null;
         }
 
         public string Name { get; private set; }

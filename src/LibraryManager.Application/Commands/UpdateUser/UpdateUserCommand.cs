@@ -1,10 +1,9 @@
-﻿using System;
+﻿using MediatR;
 using LibraryManager.Application.Models;
-using MediatR;
 
 namespace LibraryManager.Application.Commands.UpdateUser
 {
-	public class UpdateUserCommand : IRequest<BaseResult>
+    public class UpdateUserCommand : IRequest<BaseResult>
 	{
 		public Guid Id { get; set; }
         public string Name { get; set; }

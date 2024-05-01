@@ -14,7 +14,7 @@ namespace LibraryManager.Core.Entities
             : this()
         {
             Name = name;
-            CPF = cpf;
+            CPF = cpf.Trim().Replace(".","").Replace("-", "");
             Password = password;
             Email = email;
             
