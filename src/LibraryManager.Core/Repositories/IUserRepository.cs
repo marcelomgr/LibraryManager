@@ -2,12 +2,8 @@
 
 namespace LibraryManager.Core.Repositories
 {
-    public interface IUserRepository
-	{
-		Task AddAsync(User user);
-		Task UpdateAsync(User user);
-		Task<List<User>> GetAllAsync();
-        Task<User?> GetByIdAsync(Guid id);
+    public interface IUserRepository : IGenericRepository<User>
+    {
 		Task<User?> GetByCpfAsync(string cpf);
 		Task<User?> ValidateUserCredentialsAsync(string cpf, string passwordHash);
 		Task DeleteAsync(Guid id);

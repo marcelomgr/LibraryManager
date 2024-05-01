@@ -2,12 +2,8 @@
 
 namespace LibraryManager.Core.Repositories
 {
-    public interface ILoanRepository
+    public interface ILoanRepository : IGenericRepository<Loan>
     {
-        Task AddAsync(Loan loan);
-        Task UpdateAsync(Loan loan);
-        Task<Loan?> GetByIdAsync(Guid id);
-        Task<IEnumerable<Loan>> GetAllAsync();
         Task<IEnumerable<Loan>> GetLoansByUserIdAsync(Guid userId);
         Task<IEnumerable<Loan>> GetLoansByBookIdAsync(Guid bookId);
     }

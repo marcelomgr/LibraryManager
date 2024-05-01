@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using LibraryManager.Application.Commands.AuthUser;
 using LibraryManager.Application.Commands.SignUpUser;
 using LibraryManager.Application.Commands.UpdateUser;
-using LibraryManager.Application.Commands.DeleteBook;
 using LibraryManager.Application.Queries.GetUserById;
 using LibraryManager.Application.Queries.GetUsersAll;
+using LibraryManager.Application.Commands.DeleteUser;
 using LibraryManager.Application.Queries.GetUserByCpf;
 
 namespace LibraryManager.API.Controllers
@@ -26,43 +26,27 @@ namespace LibraryManager.API.Controllers
         public async Task<IActionResult> Get()
         {
             var query = new GetAllUsersQuery();
-
             var result = await _mediator.Send(query);
 
-            if (!result.Success && result.Data is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result.Success ? Ok(result) : NotFound(result.Message);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var query = new GetUserByIdQuery(id);
-
             var result = await _mediator.Send(query);
 
-            if (!result.Success && result.Data is null) {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result.Success ? Ok(result) : NotFound(result.Message);
         }
-        
+
         [HttpGet("cpf={cpf}")]
         public async Task<IActionResult> GetByCpf(string cpf)
         {
             var query = new GetUserByCpfQuery(cpf);
-
             var result = await _mediator.Send(query);
 
-            if (!result.Success && result.Data is null) {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result.Success ? Ok(result) : NotFound(result.Message);
         }
 
         [HttpPost]
@@ -71,11 +55,6 @@ namespace LibraryManager.API.Controllers
         {
             var result = await _mediator.Send(command);
 
-            if (!result.Success)
-            {
-                return BadRequest(result.Message);
-            }
-
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
@@ -83,7 +62,6 @@ namespace LibraryManager.API.Controllers
         public async Task<IActionResult> Put(Guid id, UpdateUserCommand command)
         {
             command.Id = id;
-
             var result = await _mediator.Send(command);
 
             return result.Success ? Ok(result) : BadRequest(result.Message);
@@ -95,18 +73,13 @@ namespace LibraryManager.API.Controllers
         {
             var result = await _mediator.Send(command);
 
-            if (result is null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(result);
+            return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var command = new DeleteBookCommand(id);
+            var command = new DeleteUserCommand(id);
             var result = await _mediator.Send(command);
 
             return result.Success ? Ok(result) : BadRequest(result.Message);

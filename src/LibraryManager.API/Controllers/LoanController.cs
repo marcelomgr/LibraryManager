@@ -21,32 +21,36 @@ namespace LibraryManager.API.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var result = await _mediator.Send(new GetLoansAllQuery());
+
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _mediator.Send(new GetLoanByIdQuery(id));
-            return result.Success ? Ok(result.Data) : NotFound(result.Message);
-        }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var result = await _mediator.Send(new GetLoansAllQuery());
-            return Ok(result.Data);
+            return result.Success ? Ok(result) : NotFound(result.Message);
         }
 
         [HttpGet("book/{bookId}")]
         public async Task<IActionResult> GetLoansByBookId(Guid bookId)
         {
             var result = await _mediator.Send(new GetLoansByBookIdQuery(bookId));
-            return Ok(result.Data);
+
+            return result.Success ? Ok(result) : NotFound(result.Message);
         }
 
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetLoansByUserId(Guid userId)
         {
             var result = await _mediator.Send(new GetLoansByUserIdQuery(userId));
-            return Ok(result.Data);
+
+            return result.Success ? Ok(result) : NotFound(result.Message);
         }
 
         [HttpPost]

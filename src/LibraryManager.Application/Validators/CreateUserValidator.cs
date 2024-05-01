@@ -13,6 +13,10 @@ namespace LibraryManager.Application.Validators
                 .NotEmpty()
                 .MinimumLength(2);
 
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .EmailAddress();
+
             RuleFor(x => x.CPF)
                 .NotEmpty()
                 .Custom((cpf, context) =>
