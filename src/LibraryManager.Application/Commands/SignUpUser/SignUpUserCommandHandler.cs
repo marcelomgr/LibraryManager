@@ -39,8 +39,6 @@ namespace LibraryManager.Application.Commands.SignUpUser
             if (existingUser is not null)
                 return new BaseResult<Guid>(Guid.Empty, false, "CPF já cadastrado.");
 
-            request.Password = _authService.HashPassword(request.Password);
-
             var user = request.ToEntity();
 
             if (request.CEP is not null && !request.CEP.IsNullOrEmpty())

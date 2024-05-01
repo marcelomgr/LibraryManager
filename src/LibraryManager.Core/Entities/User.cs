@@ -1,4 +1,6 @@
-﻿using LibraryManager.Core.Enums;
+﻿using System.Text;
+using LibraryManager.Core.Enums;
+using System.Security.Cryptography;
 using LibraryManager.Core.ValueObjects;
 
 namespace LibraryManager.Core.Entities
@@ -14,8 +16,8 @@ namespace LibraryManager.Core.Entities
             : this()
         {
             Name = name;
-            CPF = cpf.Trim().Replace(".","").Replace("-", "");
-            Password = password;
+            CPF = NormalizeCPF(cpf);
+            Password = HashPassword(password);
             Email = email;
             
             if (Enum.TryParse<UserRole>(role, out UserRole parsedRole))
@@ -32,11 +34,6 @@ namespace LibraryManager.Core.Entities
         public UserRole Role { get; set; }
         public LocationInfo? Location { get; private set; }
 
-        public void SetLocation(LocationInfo location)
-        {
-            Location = location;
-        }
-
         public void Update(string name,
             string cpf,
             string password,
@@ -50,6 +47,33 @@ namespace LibraryManager.Core.Entities
             Email = email;
             Role = role;
             Location = location;
+        }
+
+        public void SetLocation(LocationInfo location)
+        {
+            Location = location;
+        }
+
+        public static string NormalizeCPF(string cpf)
+        {
+            return cpf.Trim().Replace(".", "").Replace("-", "");
+        }
+
+        public static string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                StringBuilder builder = new StringBuilder();
+
+                foreach (byte b in hashedBytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+
+                return builder.ToString();
+            }
         }
     }
 }

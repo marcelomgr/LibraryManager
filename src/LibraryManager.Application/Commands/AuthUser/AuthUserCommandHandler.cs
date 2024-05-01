@@ -1,8 +1,8 @@
-﻿using FluentValidation;
+﻿using MediatR;
+using LibraryManager.Core.Entities;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Application.Models;
 using LibraryManager.Core.Services.AuthService;
-using MediatR;
 
 namespace LibraryManager.Application.Commands.AuthUser
 {
@@ -22,7 +22,7 @@ namespace LibraryManager.Application.Commands.AuthUser
             if (request.CPF.Length is 0 || request.Password.Length is 0 )
                 return new BaseResult<AuthViewModel>(null, false, "Informe usuário e senha.");
 
-            var passwordHash = _authService.HashPassword(request.Password);
+            var passwordHash = User.HashPassword(request.Password);
             var user = await _repository.ValidateUserCredentialsAsync(request.CPF, passwordHash);
 
             if (user is null)

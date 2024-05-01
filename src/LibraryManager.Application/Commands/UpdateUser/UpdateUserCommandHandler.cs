@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using FluentValidation;
 using LibraryManager.Core.Enums;
+using LibraryManager.Core.Entities;
 using Microsoft.IdentityModel.Tokens;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Core.ValueObjects;
@@ -37,7 +38,10 @@ namespace LibraryManager.Application.Commands.UpdateUser
 
             var user = await _repository.GetByIdAsync(request.Id);
 
-            request.Password = _authService.HashPassword(request.Password);
+            if (user is null)
+                return new BaseResult<Guid>(Guid.Empty, false, "Usuário não encontrado.");
+
+            request.CPF = User.NormalizeCPF(request.CPF);
 
             if (user.CPF != request.CPF)
             {
@@ -48,7 +52,7 @@ namespace LibraryManager.Application.Commands.UpdateUser
             }
 
             if (!request.Password.IsNullOrEmpty())
-                user.Password = _authService.HashPassword(request.Password);
+                user.Password = User.HashPassword(request.Password);
 
             if (user.Location?.Cep != request.CEP)
             {
