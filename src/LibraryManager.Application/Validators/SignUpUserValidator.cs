@@ -5,7 +5,7 @@ using LibraryManager.Application.Commands.SignUpUser;
 
 namespace LibraryManager.Application.Validators
 {
-    public class SignUpUserValidator : AbstractValidator<SignUpUserCommand>
+    public class SignUpUserValidator : AbstractValidator<CreateUserCommand>
     {
         public SignUpUserValidator()
         {

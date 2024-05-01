@@ -4,7 +4,7 @@ using LibraryManager.Application.Models;
 
 namespace LibraryManager.Application.Commands.SignUpUser
 {
-    public class SignUpUserCommand : IRequest<BaseResult<Guid>>
+    public class CreateUserCommand : IRequest<BaseResult<Guid>>
 	{
         public string Name { get; set; }
 		public string CPF { get; set; }
@@ -13,7 +13,7 @@ namespace LibraryManager.Application.Commands.SignUpUser
 		public string CEP { get; set; }
 		public string Role { get; set; }
 
-		public User ToEntity() => new User(Name, CPF, Password, Email, Role); //Enum.Parse<UserRole>(Role.ToString())
+		public User ToEntity() => new User(Name, CPF, Password, Email, Role);
     }
 }
 

@@ -1,6 +1,6 @@
-﻿using LibraryManager.Application.Models;
+﻿using MediatR;
 using LibraryManager.Core.Repositories;
-using MediatR;
+using LibraryManager.Application.Models;
 
 namespace LibraryManager.Application.Queries.GetUserByCpf
 {

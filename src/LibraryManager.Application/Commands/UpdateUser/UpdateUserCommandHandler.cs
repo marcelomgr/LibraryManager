@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Core.ValueObjects;
 using LibraryManager.Application.Models;
-using LibraryManager.Core.Services.AuthService;
 using LibraryManager.Core.Integrations.ApiCepIntegration;
 
 namespace LibraryManager.Application.Commands.UpdateUser
@@ -16,14 +15,12 @@ namespace LibraryManager.Application.Commands.UpdateUser
         private readonly IUserRepository _repository;
         private readonly IValidator<UpdateUserCommand> _validator;
         private readonly IApiCepService _apiCepService;
-        private readonly IAuthService _authService;
 
-        public UpdateUserCommandHandler(IUserRepository repository, IValidator<UpdateUserCommand> validator, IApiCepService apiCepService, IAuthService authService)
+        public UpdateUserCommandHandler(IUserRepository repository, IValidator<UpdateUserCommand> validator, IApiCepService apiCepService)
         {
             _repository = repository;
             _validator = validator;
             _apiCepService = apiCepService;
-            _authService = authService;
         }
 
         public async Task<BaseResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)

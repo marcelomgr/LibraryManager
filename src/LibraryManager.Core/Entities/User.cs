@@ -6,20 +6,18 @@ using LibraryManager.Core.ValueObjects;
 namespace LibraryManager.Core.Entities
 {
     public class User : BaseEntity
-    {
-        public User() : base()
-        {
-            Status = UserStatus.Active;
-        }
+    {   
+        private User() { }
 
-        public User(string name, string cpf, string password, string email, string role)
-            : this()
+        public User(string name, string cpf, string password, string email, string role) : base()
         {
             Name = name;
             CPF = NormalizeCPF(cpf);
             Password = HashPassword(password);
             Email = email;
-            
+            Status = UserStatus.Active;
+            Loans = new List<Loan>();
+
             if (Enum.TryParse<UserRole>(role, out UserRole parsedRole))
                 Role = parsedRole;
             else
@@ -33,6 +31,7 @@ namespace LibraryManager.Core.Entities
         public UserStatus Status { get; private set; }
         public UserRole Role { get; set; }
         public LocationInfo? Location { get; private set; }
+        public List<Loan> Loans { get; private set; }
 
         public void Update(string name,
             string cpf,
@@ -77,4 +76,3 @@ namespace LibraryManager.Core.Entities
         }
     }
 }
-

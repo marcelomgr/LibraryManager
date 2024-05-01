@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using LibraryManager.Application.Commands.AuthUser;
 using LibraryManager.Application.Commands.SignUpUser;
 using LibraryManager.Application.Commands.UpdateUser;
+using LibraryManager.Application.Commands.DeleteBook;
 using LibraryManager.Application.Queries.GetUserById;
 using LibraryManager.Application.Queries.GetUsersAll;
 using LibraryManager.Application.Queries.GetUserByCpf;
@@ -66,7 +67,7 @@ namespace LibraryManager.API.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Post(SignUpUserCommand command)
+        public async Task<IActionResult> Post(CreateUserCommand command)
         {
             var result = await _mediator.Send(command);
 
@@ -75,7 +76,7 @@ namespace LibraryManager.API.Controllers
                 return BadRequest(result.Message);
             }
 
-            return Ok(result);
+            return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpPut("{id}")]
@@ -85,7 +86,7 @@ namespace LibraryManager.API.Controllers
 
             var result = await _mediator.Send(command);
 
-            return Ok(result);
+            return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpPost("auth")]
@@ -100,6 +101,15 @@ namespace LibraryManager.API.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var command = new DeleteBookCommand(id);
+            var result = await _mediator.Send(command);
+
+            return result.Success ? Ok(result) : BadRequest(result.Message);
         }
     }
 }

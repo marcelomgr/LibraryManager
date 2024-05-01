@@ -4,27 +4,24 @@ using Microsoft.IdentityModel.Tokens;
 using LibraryManager.Core.ValueObjects;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Application.Models;
-using LibraryManager.Core.Services.AuthService;
 using LibraryManager.Core.Integrations.ApiCepIntegration;
 
 namespace LibraryManager.Application.Commands.SignUpUser
 {
-    public class SignUpUserCommandHandler : IRequestHandler<SignUpUserCommand, BaseResult<Guid>>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, BaseResult<Guid>>
     {
         private readonly IUserRepository _repository;
-        private readonly IValidator<SignUpUserCommand> _validator;
+        private readonly IValidator<CreateUserCommand> _validator;
         private readonly IApiCepService _apiCepService;
-        private readonly IAuthService _authService;
 
-        public SignUpUserCommandHandler(IUserRepository repository, IValidator<SignUpUserCommand> validator, IApiCepService apiCepService, IAuthService authService)
+        public CreateUserCommandHandler(IUserRepository repository, IValidator<CreateUserCommand> validator, IApiCepService apiCepService)
         {
             _repository = repository;
             _validator = validator;
             _apiCepService = apiCepService;
-            _authService = authService;
         }
 
-        public async Task<BaseResult<Guid>> Handle(SignUpUserCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResult<Guid>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 

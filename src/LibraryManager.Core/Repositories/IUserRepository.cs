@@ -10,7 +10,7 @@ namespace LibraryManager.Core.Repositories
         Task<User?> GetByIdAsync(Guid id);
 		Task<User?> GetByCpfAsync(string cpf);
 		Task<User?> ValidateUserCredentialsAsync(string cpf, string passwordHash);
-
+		Task DeleteAsync(Guid id);
     }
 }
 

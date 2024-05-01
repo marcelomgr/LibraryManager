@@ -1,6 +1,6 @@
 ﻿using LibraryManager.Core.Entities;
-using LibraryManager.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
+using LibraryManager.Core.Repositories;
 
 namespace LibraryManager.Infrastructure.Persistence.Repositories
 {
@@ -16,7 +16,6 @@ namespace LibraryManager.Infrastructure.Persistence.Repositories
         public async Task AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
-
             await _context.SaveChangesAsync();
         }
 
@@ -51,6 +50,17 @@ namespace LibraryManager.Infrastructure.Persistence.Repositories
         public async Task<User?> ValidateUserCredentialsAsync(string cpf, string passwordHash)
         {
             return await _context.Users.SingleOrDefaultAsync(u => u.CPF == cpf && u.Password == passwordHash);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user is not null)
+            {
+                user.Delete();
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

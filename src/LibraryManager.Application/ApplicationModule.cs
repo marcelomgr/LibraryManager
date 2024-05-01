@@ -28,7 +28,7 @@ namespace LibraryManager.Application
 
         private static IServiceCollection AddValidators(this IServiceCollection services)
         {
-            services.AddTransient<IValidator<SignUpUserCommand>, SignUpUserValidator>();
+            services.AddTransient<IValidator<CreateUserCommand>, SignUpUserValidator>();
             services.AddTransient<IValidator<UpdateUserCommand>, UpdateUserValidator>();
 
             return services;

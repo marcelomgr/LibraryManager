@@ -28,7 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Persistence\Migrations\" />
-    <Folder Include="Persistence\Repositories\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibraryManager.Core\LibraryManager.Core.csproj" />

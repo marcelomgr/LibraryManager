@@ -1,5 +1,5 @@
-﻿using LibraryManager.Application.Models;
-using MediatR;
+﻿using MediatR;
+using LibraryManager.Application.Models;
 
 namespace LibraryManager.Application.Queries.GetUserById
 {
