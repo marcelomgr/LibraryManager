@@ -5,9 +5,9 @@ using LibraryManager.Application.Commands.SignUpUser;
 
 namespace LibraryManager.Application.Validators
 {
-    public class SignUpUserValidator : AbstractValidator<CreateUserCommand>
+    public class CreateUserValidator : AbstractValidator<CreateUserCommand>
     {
-        public SignUpUserValidator()
+        public CreateUserValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty()

@@ -57,7 +57,7 @@ namespace LibraryManager.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("devolution/{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateLoanCommand command)
         {
             command.Id = id;

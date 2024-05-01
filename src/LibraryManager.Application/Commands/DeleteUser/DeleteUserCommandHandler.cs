@@ -1,11 +1,10 @@
 ﻿using MediatR;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Application.Models;
-using LibraryManager.Application.Commands.DeleteBook;
 
 namespace LibraryManager.Application.Commands.DeleteUser
 {
-    public class DeleteUserCommandHandler : IRequestHandler<DeleteBookCommand, BaseResult>
+    public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, BaseResult>
     {
         private readonly IUserRepository _userRepository;
 
@@ -14,7 +13,7 @@ namespace LibraryManager.Application.Commands.DeleteUser
             _userRepository = userRepository;
         }
 
-        public async Task<BaseResult> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResult> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByIdAsync(request.Id);
 

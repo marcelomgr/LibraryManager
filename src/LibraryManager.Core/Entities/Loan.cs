@@ -16,9 +16,9 @@ namespace LibraryManager.Core.Entities
         public Book Book { get; set; }
         public DateTime? ReturnDate { get; private set; }
 
-        public void UpdateReturnDate(DateTime returnDate)
+        public void UpdateReturnDate()
         {
-            ReturnDate = returnDate;
+            ReturnDate = DateTime.UtcNow;
         }
     }
 }

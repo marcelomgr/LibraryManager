@@ -3,7 +3,7 @@ namespace LibraryManager.Core.Enums
 {
     public enum BookStatus
     {
-        Available,
-        Lent
+        Available = 1,
+        Lent = 2
     }
 }

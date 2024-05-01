@@ -31,5 +31,15 @@ namespace LibraryManager.Core.Entities
             ISBN = isbn;
             PublicationYear = publicationYear;
         }
+
+        public void Devolution()
+        {
+            Status = BookStatus.Available;
+        }
+
+        public void Lent()
+        {
+            Status = BookStatus.Lent;
+        }
     }
 }

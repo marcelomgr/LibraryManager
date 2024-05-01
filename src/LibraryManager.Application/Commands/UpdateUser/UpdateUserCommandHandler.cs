@@ -44,7 +44,7 @@ namespace LibraryManager.Application.Commands.UpdateUser
             {
                 var existingUser = await _repository.GetByCpfAsync(request.CPF);
 
-                if (existingUser != null)
+                if (existingUser is not null)
                     return new BaseResult<Guid>(Guid.Empty, false, "CPF já cadastrado.");
             }
 
