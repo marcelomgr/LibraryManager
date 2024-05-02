@@ -50,5 +50,17 @@ namespace LibraryManager.Infrastructure.Persistence.Repositories
         {
             return await _context.Set<T>().FindAsync(id);
         }
+
+        public async Task<T?> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(entity => entity.Id == id);
+        }
     }
 }

@@ -1,27 +1,31 @@
 ﻿using MediatR;
-using LibraryManager.Core.Entities;
+using AutoMapper;
+using LibraryManager.Core.Dtos;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Application.Models;
 
 namespace LibraryManager.Application.Queries.GetLoanById
 {
-    public class GetLoanByIdQueryHandler : IRequestHandler<GetLoanByIdQuery, BaseResult<Loan>>
+    public class GetLoanByIdQueryHandler : IRequestHandler<GetLoanByIdQuery, BaseResult<LoanDTO>>
     {
         private readonly ILoanRepository _loanRepository;
+        private readonly IMapper _mapper;
 
-        public GetLoanByIdQueryHandler(ILoanRepository loanRepository)
+        public GetLoanByIdQueryHandler(ILoanRepository loanRepository, IMapper mapper)
         {
             _loanRepository = loanRepository;
+            _mapper = mapper;
         }
 
-        public async Task<BaseResult<Loan>> Handle(GetLoanByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResult<LoanDTO>> Handle(GetLoanByIdQuery request, CancellationToken cancellationToken)
         {
-            var loan = await _loanRepository.GetByIdAsync(request.Id);
+            var loan = await _loanRepository.GetByIdAsync(request.Id, l => l.User, l => l.Book);
+            var loanDTO = _mapper.Map<LoanDTO>(loan);
 
             if (loan is null)
-                return new BaseResult<Loan>(null, false, "Empréstimo não encontrado.");
+                return new BaseResult<LoanDTO>(null, false, "Empréstimo não encontrado.");
 
-            return new BaseResult<Loan>(loan);
+            return new BaseResult<LoanDTO>(loanDTO);
         }
     }
 }

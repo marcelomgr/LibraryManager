@@ -55,6 +55,7 @@ namespace LibraryManager.Infrastructure
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddAutoMapper(typeof(MappingService));
 
             return services;
         }

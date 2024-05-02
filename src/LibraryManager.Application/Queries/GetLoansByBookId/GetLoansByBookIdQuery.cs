@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using LibraryManager.Core.Entities;
+using LibraryManager.Core.Dtos;
 using LibraryManager.Application.Models;
 
 namespace LibraryManager.Application.Queries.GetLoansByBookId
 {
-    public class GetLoansByBookIdQuery : IRequest<BaseResult<IEnumerable<Loan>>>
+    public class GetLoansByBookIdQuery : IRequest<BaseResult<IEnumerable<LoanDTO>>>
     {
         public Guid BookId { get; }
 
