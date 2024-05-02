@@ -3,73 +3,54 @@ using FluentValidation;
 using LibraryManager.Core.Entities;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Application.Models;
-using LibraryManager.Infrastructure.Persistence.Repositories;
-using LibraryManager.Infrastructure.Persistence;
 
 namespace LibraryManager.Application.Commands.CreateLoan
 {
     public class CreateLoanCommandHandler : IRequestHandler<CreateLoanCommand, BaseResult<Guid>>
     {
-        private readonly ILoanRepository _loanRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly LibraryDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<CreateLoanCommand> _validator;
 
-        public CreateLoanCommandHandler(ILoanRepository loanRepository, IValidator<CreateLoanCommand> validator, LibraryDbContext context, IBookRepository bookRepository)
+        public CreateLoanCommandHandler(IUnitOfWork unitOfWork, IValidator<CreateLoanCommand> validator)
         {
-            _loanRepository = loanRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
-            _context = context;
-            _bookRepository = bookRepository;
         }
 
         public async Task<BaseResult<Guid>> Handle(CreateLoanCommand request, CancellationToken cancellationToken)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-            try
+            if (!validationResult.IsValid)
             {
-                var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-
-                if (!validationResult.IsValid)
-                {
-                    var errorMessages = string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage));
-                    await transaction.RollbackAsync();
-                    return new BaseResult<Guid>(Guid.Empty, false, errorMessages);
-                }
-
-                var loan = new Loan(request.UserId, request.BookId);
-                await _loanRepository.AddAsync(loan);
-
-                var book = await _bookRepository.GetByIdAsync(loan.BookId);
-
-                if (book is not null)
-                {
-                    if (book.Status == Core.Enums.BookStatus.Lent)
-                    {
-                        await transaction.RollbackAsync();
-                        return new BaseResult<Guid>(Guid.Empty, false, "O livro está emprestado.");
-                    }
-
-                    book.Lent();
-
-                    await _bookRepository.UpdateAsync(book);
-                }
-                else
-                {
-                    await transaction.RollbackAsync();
-                    return new BaseResult<Guid>(Guid.Empty, false, "Livro não encontrado.");
-                }
-
-                await transaction.CommitAsync();
-
-                return new BaseResult<Guid>(loan.Id);
+                var errorMessages = string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return new BaseResult<Guid>(Guid.Empty, false, errorMessages);
             }
-            catch (Exception ex)
+
+            var loan = new Loan(request.UserId, request.BookId);
+            await _unitOfWork.Loans.AddAsync(loan);
+
+            var book = await _unitOfWork.Books.GetByIdAsync(loan.BookId);
+
+            if (book is not null)
             {
-                await transaction.RollbackAsync();
-                return new BaseResult<Guid>(Guid.Empty, false, $"Ocorreu um erro ao atualizar o empréstimo: {ex.Message}");
+                if (book.Status == Core.Enums.BookStatus.Lent)
+                {
+                    return new BaseResult<Guid>(Guid.Empty, false, "O livro está emprestado.");
+                }
+
+                book.Lent();
+
+                await _unitOfWork.Books.UpdateAsync(book);
             }
+            else
+            {
+                return new BaseResult<Guid>(Guid.Empty, false, "Livro não encontrado.");
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new BaseResult<Guid>(loan.Id);
         }
     }
 }

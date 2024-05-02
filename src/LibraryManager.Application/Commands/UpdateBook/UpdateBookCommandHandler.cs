@@ -7,12 +7,12 @@ namespace LibraryManager.Application.Commands.UpdateBook
 {
     public class UpdateBookCommandHandler : IRequestHandler<UpdateBookCommand, BaseResult>
     {
-        private readonly IBookRepository _bookRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<UpdateBookCommand> _validator;
 
-        public UpdateBookCommandHandler(IBookRepository bookRepository, IValidator<UpdateBookCommand> validator)
+        public UpdateBookCommandHandler(IUnitOfWork unitOfWork, IValidator<UpdateBookCommand> validator)
         {
-            _bookRepository = bookRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
         }
 
@@ -26,17 +26,17 @@ namespace LibraryManager.Application.Commands.UpdateBook
                 return new BaseResult<Guid>(Guid.Empty, false, errorMessages);
             }
 
-            var book = await _bookRepository.GetByIdAsync(request.Id);
+            var book = await _unitOfWork.Books.GetByIdAsync(request.Id);
 
             if (book is null)
                 return new BaseResult(false, "Livro não encontrado.");
 
             book.Update(request.Title, request.Author, request.ISBN, request.PublicationYear);
 
-            await _bookRepository.UpdateAsync(book);
-            
+            await _unitOfWork.Books.UpdateAsync(book);
+            await _unitOfWork.SaveChangesAsync();
+
             return new BaseResult();
         }
     }
-
 }

@@ -12,13 +12,13 @@ namespace LibraryManager.Application.Commands.UpdateUser
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, BaseResult>
     {
-        private readonly IUserRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<UpdateUserCommand> _validator;
         private readonly IApiCepService _apiCepService;
 
-        public UpdateUserCommandHandler(IUserRepository repository, IValidator<UpdateUserCommand> validator, IApiCepService apiCepService)
+        public UpdateUserCommandHandler(IUnitOfWork unitOfWork, IValidator<UpdateUserCommand> validator, IApiCepService apiCepService)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _apiCepService = apiCepService;
         }
@@ -33,7 +33,7 @@ namespace LibraryManager.Application.Commands.UpdateUser
                 return new BaseResult<Guid>(Guid.Empty, false, errorMessages);
             }
 
-            var user = await _repository.GetByIdAsync(request.Id);
+            var user = await _unitOfWork.Users.GetByIdAsync(request.Id);
 
             if (user is null)
                 return new BaseResult<Guid>(Guid.Empty, false, "Usuário não encontrado.");
@@ -42,7 +42,7 @@ namespace LibraryManager.Application.Commands.UpdateUser
 
             if (user.CPF != request.CPF)
             {
-                var existingUser = await _repository.GetByCpfAsync(request.CPF);
+                var existingUser = await _unitOfWork.Users.GetByCpfAsync(request.CPF);
 
                 if (existingUser is not null)
                     return new BaseResult<Guid>(Guid.Empty, false, "CPF já cadastrado.");
@@ -70,7 +70,8 @@ namespace LibraryManager.Application.Commands.UpdateUser
                 Enum.Parse<UserRole>(request.Role.ToString()),
                 user.Location);
 
-            await _repository.UpdateAsync(user);
+            await _unitOfWork.Users.UpdateAsync(user);
+            await _unitOfWork.SaveChangesAsync();
 
             return new BaseResult();
         }

@@ -6,21 +6,22 @@ namespace LibraryManager.Application.Commands.DeleteBook
 {
     public class DeleteBookCommandHandler : IRequestHandler<DeleteBookCommand, BaseResult>
     {
-        private readonly IBookRepository _bookRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteBookCommandHandler(IBookRepository bookRepository)
+        public DeleteBookCommandHandler(IUnitOfWork unitOfWork)
         {
-            _bookRepository = bookRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<BaseResult> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
         {
-            var book = await _bookRepository.GetByIdAsync(request.Id);
+            var book = await _unitOfWork.Books.GetByIdAsync(request.Id);
 
             if (book is null)
                 return new BaseResult(false, "Livro não encontrado.");
 
-            await _bookRepository.DeleteAsync(book.Id);
+            await _unitOfWork.Books.DeleteAsync(book.Id);
+            await _unitOfWork.SaveChangesAsync();
 
             return new BaseResult();
         }

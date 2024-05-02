@@ -19,7 +19,7 @@ namespace LibraryManager.Application.Commands.AuthUser
 
         public async Task<BaseResult<AuthViewModel>> Handle(AuthUserCommand request, CancellationToken cancellationToken)
         {
-            if (request.CPF.Length is 0 || request.Password.Length is 0 )
+            if (request.CPF.Length is 0 || request.Password.Length is 0)
                 return new BaseResult<AuthViewModel>(null, false, "Informe usuário e senha.");
 
             var passwordHash = User.HashPassword(request.Password);
@@ -33,6 +33,5 @@ namespace LibraryManager.Application.Commands.AuthUser
 
             return new BaseResult<AuthViewModel>(viewModel);
         }
-
     }
 }

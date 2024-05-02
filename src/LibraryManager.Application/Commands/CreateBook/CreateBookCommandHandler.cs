@@ -8,12 +8,12 @@ namespace LibraryManager.Application.Commands.CreateBook
 {
     public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, BaseResult<Guid>>
     {
-        private readonly IBookRepository _bookRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<CreateBookCommand> _validator;
 
-        public CreateBookCommandHandler(IBookRepository bookRepository, IValidator<CreateBookCommand> validator)
+        public CreateBookCommandHandler(IUnitOfWork unitOfWork, IValidator<CreateBookCommand> validator)
         {
-            _bookRepository = bookRepository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
         }
 
@@ -29,7 +29,8 @@ namespace LibraryManager.Application.Commands.CreateBook
 
             var book = new Book(request.Title, request.Author, request.ISBN, request.PublicationYear);
 
-            await _bookRepository.AddAsync(book);
+            await _unitOfWork.Books.AddAsync(book);
+            await _unitOfWork.SaveChangesAsync();
 
             return new BaseResult<Guid>(book.Id);
         }

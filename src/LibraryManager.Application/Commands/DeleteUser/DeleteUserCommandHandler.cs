@@ -6,21 +6,22 @@ namespace LibraryManager.Application.Commands.DeleteUser
 {
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, BaseResult>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteUserCommandHandler(IUserRepository userRepository)
+        public DeleteUserCommandHandler(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<BaseResult> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(request.Id);
+            var user = await _unitOfWork.Users.GetByIdAsync(request.Id);
 
             if (user is null)
-                return new BaseResult(false, "Usuario não encontrado.");
+                return new BaseResult(false, "Usuário não encontrado.");
 
-            await _userRepository.DeleteAsync(user.Id);
+            await _unitOfWork.Users.DeleteAsync(user.Id);
+            await _unitOfWork.SaveChangesAsync();
 
             return new BaseResult();
         }

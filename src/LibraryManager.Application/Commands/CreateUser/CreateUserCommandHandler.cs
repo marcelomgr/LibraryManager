@@ -10,13 +10,13 @@ namespace LibraryManager.Application.Commands.SignUpUser
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, BaseResult<Guid>>
     {
-        private readonly IUserRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<CreateUserCommand> _validator;
         private readonly IApiCepService _apiCepService;
 
-        public CreateUserCommandHandler(IUserRepository repository, IValidator<CreateUserCommand> validator, IApiCepService apiCepService)
+        public CreateUserCommandHandler(IUnitOfWork unitOfWork, IValidator<CreateUserCommand> validator, IApiCepService apiCepService)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _validator = validator;
             _apiCepService = apiCepService;
         }
@@ -31,7 +31,7 @@ namespace LibraryManager.Application.Commands.SignUpUser
                 return new BaseResult<Guid>(Guid.Empty, false, errorMessages);
             }
 
-            var existingUser = await _repository.GetByCpfAsync(request.CPF.Trim().Replace(".", "").Replace("-", ""));
+            var existingUser = await _unitOfWork.Users.GetByCpfAsync(request.CPF.Trim().Replace(".", "").Replace("-", ""));
 
             if (existingUser is not null)
                 return new BaseResult<Guid>(Guid.Empty, false, "CPF já cadastrado.");
@@ -49,7 +49,8 @@ namespace LibraryManager.Application.Commands.SignUpUser
                 user.SetLocation(location);
             }
 
-            await _repository.AddAsync(user);
+            await _unitOfWork.Users.AddAsync(user);
+            await _unitOfWork.SaveChangesAsync();
 
             return new BaseResult<Guid>(user.Id);
         }

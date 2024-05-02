@@ -35,7 +35,7 @@ namespace LibraryManager.Infrastructure.Persistence.Repositories
         {
             IQueryable<T> query = _context.Set<T>();
 
-            if (includes != null)
+            if (includes is not null)
             {
                 foreach (var include in includes)
                 {

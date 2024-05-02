@@ -1,66 +1,46 @@
 ﻿using MediatR;
-using LibraryManager.Core.Enums;
-using Microsoft.EntityFrameworkCore;
 using LibraryManager.Core.Repositories;
 using LibraryManager.Application.Models;
-using LibraryManager.Infrastructure.Persistence;
 
 namespace LibraryManager.Application.Commands.UpdateLoan
 {
     public class UpdateLoanCommandHandler : IRequestHandler<UpdateLoanCommand, BaseResult>
     {
-        private readonly ILoanRepository _loanRepository;
-        private readonly IBookRepository _bookRepository;
-        private readonly LibraryDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateLoanCommandHandler(ILoanRepository loanRepository, IBookRepository bookRepository, LibraryDbContext context)
+        public UpdateLoanCommandHandler(IUnitOfWork unitOfWork)
         {
-            _loanRepository = loanRepository;
-            _bookRepository = bookRepository;
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<BaseResult> Handle(UpdateLoanCommand request, CancellationToken cancellationToken)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            var loan = await _unitOfWork.Loans.GetByIdAsync(request.Id);
 
-            try
+            if (loan is null)
             {
-                var loan = await _loanRepository.GetByIdAsync(request.Id);
-
-                if (loan is null)
-                {
-                    await transaction.RollbackAsync();
-                    return new BaseResult(false, "Empréstimo não encontrado.");
-                }
-
-                loan.UpdateReturnDate();
-
-                await _loanRepository.UpdateAsync(loan);
-
-                var book = await _bookRepository.GetByIdAsync(loan.BookId);
-
-                if (book is not null)
-                {
-                    book.Devolution();
-
-                    await _bookRepository.UpdateAsync(book);
-                }
-                else
-                {
-                    await transaction.RollbackAsync();
-                    return new BaseResult(false, "Livro não encontrado.");
-                }
-
-                await transaction.CommitAsync();
-
-                return new BaseResult();
+                return new BaseResult(false, "Empréstimo não encontrado.");
             }
-            catch (Exception ex)
+
+            loan.UpdateReturnDate();
+            
+            await _unitOfWork.Loans.UpdateAsync(loan);
+
+            var book = await _unitOfWork.Books.GetByIdAsync(loan.BookId);
+
+            if (book is not null)
             {
-                await transaction.RollbackAsync();
-                return new BaseResult(false, $"Ocorreu um erro ao atualizar o empréstimo: {ex.Message}");
+                book.Devolution();
             }
+            else
+            {
+                return new BaseResult(false, "Livro não encontrado.");
+            }
+
+            await _unitOfWork.Books.UpdateAsync(book);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new BaseResult();
         }
     }
 }
