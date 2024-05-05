@@ -23,19 +23,17 @@ namespace LibraryManager.Application.Commands.UpdateLoan
             }
 
             loan.UpdateReturnDate();
-            
+
             await _unitOfWork.Loans.UpdateAsync(loan);
 
             var book = await _unitOfWork.Books.GetByIdAsync(loan.BookId);
 
-            if (book is not null)
-            {
-                book.Devolution();
-            }
-            else
+            if (book is null)
             {
                 return new BaseResult(false, "Livro não encontrado.");
             }
+
+            book.Devolution();
 
             await _unitOfWork.Books.UpdateAsync(book);
             await _unitOfWork.SaveChangesAsync();

@@ -4,6 +4,7 @@ namespace LibraryManager.Core.Entities
 {
     public class Book : BaseEntity
     {
+        public Book() { }
         public Book(string title, string author, string iSBN, int publicationYear)
         {
             Title = title;

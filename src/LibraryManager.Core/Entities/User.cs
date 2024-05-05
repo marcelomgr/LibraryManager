@@ -6,8 +6,8 @@ using LibraryManager.Core.ValueObjects;
 namespace LibraryManager.Core.Entities
 {
     public class User : BaseEntity
-    {   
-        private User() { }
+    {
+        public User() { }
 
         public User(string name, string cpf, string password, string email, string role) : base()
         {
