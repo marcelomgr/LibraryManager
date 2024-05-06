@@ -11,15 +11,15 @@ Este é um projeto de biblioteca digital desenvolvido como parte da mentoria .Ne
 - SQL Server
 - UnitOfWork
 - Padrão Repository
+- Generic Repository (Abstração)
 - CQRS
 - Arquitetura Limpa
 - Testes Unitários
 - Fluent Validation
-- Validação de APIs com FluentValidation
 - DTO's
 - ValueObject
 - Integração com API de CEP
-- Autenticação e Autorização com JWT
+- Autenticação e Autorização com JWT (e Autorização via Swagger)
 
 ---
 
@@ -52,5 +52,14 @@ cd Infrastructure
 dotnet ef migrations add FirstMigration -s ../LibraryManager.API -o Persistence/Migrations
 dotnet ef database update -s ../LibraryManager.API
 ```
+
+### Passo 4: Executar a aplicação
+Se necessário, altere o projeto de inicialização para "LibraryManager.API"
+Rode a aplicação
+A action "Users" (Post) está como "AllowAnonymous", portanto deve ser possível efetuar o cadastro de seu usuário sem autenticação
+Em seguida, autentique-se pela action "Auth"
+Após a obtenção do token, vá em "Authorize" no swagger, e inclua no campo "bearer coleSeuTokenGeradoAqui"
+Pronto, ao executar as actions, já deve estar autorizado
+
 
 Com esse passo a passo você deve conseguir rodar o projeto sem maiores problemas!
