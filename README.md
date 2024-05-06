@@ -54,12 +54,13 @@ dotnet ef database update -s ../LibraryManager.API
 ```
 
 ### Passo 4: Executar a aplicação
-Se necessário, altere o projeto de inicialização para "LibraryManager.API"
-Rode a aplicação
-A action "Users" (Post) está como "AllowAnonymous", portanto deve ser possível efetuar o cadastro de seu usuário sem autenticação
-Em seguida, autentique-se pela action "Auth"
-Após a obtenção do token, vá em "Authorize" no swagger, e inclua no campo "bearer coleSeuTokenGeradoAqui"
-Pronto, ao executar as actions, já deve estar autorizado
+
+- Se necessário, altere o projeto de inicialização para "LibraryManager.API"
+- Rode a aplicação
+- A action "Users" (Post) está como "AllowAnonymous", portanto deve ser possível efetuar o cadastro de seu usuário sem autenticação
+- Em seguida, autentique-se pela action "Auth"
+- Após a obtenção do token, vá em "Authorize" no swagger, e inclua no campo "bearer coleSeuTokenGeradoAqui"
+- Pronto, ao executar as actions, já deve estar autorizado
 
 
 Com esse passo a passo você deve conseguir rodar o projeto sem maiores problemas!
