@@ -49,7 +49,8 @@ Senha: Abcd=1234
 
 ```bash
 cd Infrastructure
-dotnet ef migrations add FirstMigration -s ../LibraryManager.API -o Persistence/Migrations
+dotnet tool install --global dotnet-ef
+dotnet ef migrations add TestMigration -s ../LibraryManager.API -o Persistence/Migrations
 dotnet ef database update -s ../LibraryManager.API
 ```
 
@@ -57,7 +58,7 @@ dotnet ef database update -s ../LibraryManager.API
 
 - Se necessário, altere o projeto de inicialização para "LibraryManager.API"
 - Rode a aplicação
-- A action "Users" (Post) está como "AllowAnonymous", portanto deve ser possível efetuar o cadastro de seu usuário sem autenticação
+- A action "Users" (Post) está como "AllowAnonymous", portanto deve ser possível efetuar o cadastro de seu usuário sem autenticação (utilize a pemissão "Admin")
 - Em seguida, autentique-se pela action "Auth"
 - Após a obtenção do token, vá em "Authorize" no swagger, e inclua no campo "bearer coleSeuTokenGeradoAqui"
 - Pronto, ao executar as actions, já deve estar autorizado
