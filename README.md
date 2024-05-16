@@ -1,6 +1,6 @@
 ## Sobre o Projeto
 
-Este é um projeto de biblioteca digital desenvolvido como parte da mentoria .Net Expert, proposta pelo mentor LuisDev (https://www.luisdev.com.br/).
+O projeto consiste em um gerenciador de empréstimo de livros de uma biblioteca, composto por três módulos: Livros, Usuários e Empréstimos, abrangendo a aplicação de regras de negócio essenciais entre eles.
 
 ---
 
